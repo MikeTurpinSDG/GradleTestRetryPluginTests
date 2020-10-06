@@ -1,0 +1,110 @@
+import java.util.concurrent.ConcurrentSkipListMap
+import java.util.concurrent.TimeUnit
+import com.google.common.base.Stopwatch
+
+buildscript {
+    ext {
+        springBootVersion = '2.3.1.RELEASE'
+        dockerVersion = '1.2'
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("se.transmode.gradle:gradle-docker:${dockerVersion}")
+    }
+    repositories {
+        jcenter()
+    }
+}
+
+plugins {
+    id "com.scalified.plugins.gradle.metamodel" version "0.0.1"
+}
+
+// Log timings per gradle task at the end of the build.
+gradle.addListener new TimingsListener()
+
+wrapper {
+    gradleVersion = '5.6.4'
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'mytestorg'
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+    repositories {
+        jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
+    }
+    task wrapper(type: Wrapper) {
+        gradleVersion = '5.6.4'
+        distributionUrl = 'https://services.gradle.org/distributions/gradle-5.6.4-bin.zip'
+        distributionType = Wrapper.DistributionType.BIN
+    }
+
+    dependencyManagement {
+        applyMavenExclusions = false
+
+
+    }
+
+    tasks.withType(Test) {
+        maxHeapSize = '2g'
+        // maxParallelForks = 4
+    }
+    plugins.withType(JacocoPlugin) {
+        tasks["test"].finalizedBy 'jacocoTestReport'
+    }
+}
+
+class TimingsListener implements TaskExecutionListener, BuildListener {
+    // ConcurrentSkipListMap to have thread safe and natural order e.g. list projects alphabetically
+    private Map<String, Stopwatch> startTimesMap = new ConcurrentSkipListMap()
+    private Map<String, Long> endTimesMap = new ConcurrentSkipListMap()
+
+    @Override
+    void beforeExecute(Task task) {
+        synchronized (startTimesMap) {
+            startTimesMap.put("${task.getProject().getName()}:${task.getName()}".toString(), Stopwatch.createStarted())
+        }
+    }
+
+    @Override
+    void afterExecute(Task task, TaskState taskState) {
+        synchronized (endTimesMap) {
+            def stopWatch = startTimesMap.get("${task.getProject().getName()}:${task.getName()}")
+            endTimesMap.put("${task.getProject().getName()}:${task.getName()}".toString(), stopWatch.elapsed(TimeUnit.MILLISECONDS))
+            stopWatch.stop()
+        }
+    }
+
+    @Override
+    void buildFinished(BuildResult result) {
+        println "Task timings:"
+        for (Map.Entry<String, Long> entry : endTimesMap.entrySet()) {
+            printf "%-60s - %sms\n", entry.getKey(), entry.getValue()
+        }
+    }
+
+    @Override
+    void buildStarted(Gradle gradle) {}
+
+    @Override
+    void projectsEvaluated(Gradle gradle) {}
+
+    @Override
+    void projectsLoaded(Gradle gradle) {}
+
+    @Override
+    void settingsEvaluated(Settings settings) {}
+}
