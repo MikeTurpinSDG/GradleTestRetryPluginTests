@@ -11,7 +11,7 @@ import spock.lang.Specification
 class RandomFlakyTestSimulatorSpec extends Specification {
 
     @Shared
-    int randomNumberValue
+    Integer randomNumberValue = null
     @Shared
     boolean forceSecondSuccess = true
     @Shared
@@ -21,7 +21,9 @@ class RandomFlakyTestSimulatorSpec extends Specification {
 
     private void generateRandomNumberValue() {
         Random rnd = new Random()
-        int randomNumberValue = rnd.nextInt(1)
+        int randomNumberVal = rnd.nextInt(4)
+        randomNumberValue = randomNumberVal
+        println(randomNumberVal)
     }
 
     @PipelineTests
