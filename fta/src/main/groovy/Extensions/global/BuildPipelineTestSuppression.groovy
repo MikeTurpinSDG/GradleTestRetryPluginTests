@@ -17,12 +17,12 @@ class BuildPipelineTestSuppression extends AbstractGlobalExtension {
     @Override
     void start() {
         //Static list is used as stand in for API call to get list of tests to suppress
-       listOfSuppressedTests = new ArrayList<String>()
-        listOfSuppressedTests.add("Pipeline.FilterSuppressedTestsSpec.ConfirmTestIsSuppressedForAllBranchesEnvironmentsUsingStar")
-        listOfSuppressedTests.add("Pipeline.FilterSuppressedTestsSpec.VerifyTestIsSupressed")
-        listOfSuppressedTests.add("Pipeline.FilterSuppressedTestsSpec.ConfirmTestIsSuppressedForAllBranchesEnvironmentsUsingDefaults")
-        listOfSuppressedTests.add("Pipeline.FilterEntireSuppressedSpec")
-
+        ArrayList<String> testsToSuppress = new ArrayList<String>()
+        testsToSuppress.add("Pipeline.FilterSuppressedTestsSpec.ConfirmTestIsSuppressedForAllBranchesEnvironmentsUsingStar")
+        testsToSuppress.add("Pipeline.FilterSuppressedTestsSpec.VerifyTestIsSupressed")
+        testsToSuppress.add("Pipeline.FilterSuppressedTestsSpec.ConfirmTestIsSuppressedForAllBranchesEnvironmentsUsingDefaults")
+        testsToSuppress.add("Pipeline.FilterEntireSuppressedSpec")
+        listOfSuppressedTests = testsToSuppress.collect { Pattern.compile(it.replace(".", "\\.").replace("*", "\\.*")) }
     }
 
     @Override

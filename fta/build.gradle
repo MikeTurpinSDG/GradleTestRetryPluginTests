@@ -55,17 +55,14 @@ tasks.withType(Test) {
     systemProperties = System.properties
     systemProperty 'geb.env', System.getProperty('geb.env') ?: 'testEnv'
     systemProperty 'forceAllTests', System.getProperty('forceAllTests') ?: false
-    systemProperty 'rerun_failed_tests', System.getProperty('rerun_failed_tests') ?: false
     testLogging {
         events 'started', 'passed'
     }
-//    if (System.getProperty('rerun_failed_tests')) {
     retry {
         maxRetries = 3
         maxFailures = 20
         failOnPassedAfterRetry = false
     }
-//    }
 
     afterTest { desc, result ->
         def totalTime = result.endTime - result.startTime
