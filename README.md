@@ -1,0 +1,1 @@
+File layout consists of a gradle project within another Gradle project.  To run the test scenario, switch to the FTA directory run the gradle wrapper command: PipelineTests  
