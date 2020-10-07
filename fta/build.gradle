@@ -1,5 +1,4 @@
 apply plugin: "groovy"
-apply plugin: "info.solidsoft.pitest"
 apply plugin: "org.gradle.test-retry"
 
 repositories {
@@ -9,13 +8,10 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:3.0.4'                                  // Groovy
-    compile 'org.gebish:geb-core:3.4'                                               // Geb
-    compile 'org.gebish:geb-spock:3.4'                                              // Geb integration with Spock test framework
     compile('org.spockframework:spock-core:2.0-M2-groovy-3.0') {                    // Spock test framework
         exclude group: "org.codehaus.groovy" // exclude groovy from the dependencies for spock-core
     }
     compile "org.spockframework:spock-junit4:2.0-M2-groovy-3.0"                     // Workaround for Spock and JUnit 5 incompatibility
-    compile 'com.anotherchrisberry:spock-retry:0.6.4'                               // Allows retrying tests on failure
     compile 'com.aoe:geb-spock-reports:0.3.0-RC1'                                   // Provides screenshots for reports
     compile('com.athaydes:spock-reports:2.0-RC2') {                                 // HTML Report for test run
         transitive = false // this avoids affecting the version of Groovy/Spock
@@ -23,7 +19,6 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.30'
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'ch.qos.logback:logback-core:1.2.3'
-    compile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
     compile 'commons-io:commons-io:2.6'
     compile 'org.assertj:assertj-core:3.15.0'                                       // AssertJ methods
     compile 'org.gradle:test-retry-gradle-plugin:1.1.9'
@@ -33,10 +28,8 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
-        maven { url 'https://mvnrepository.com/artifact/org.spockframework/spock-core'}
     }
     dependencies {
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.3.0'
         classpath 'org.gradle:test-retry-gradle-plugin:1.1.9'
     }
 }
