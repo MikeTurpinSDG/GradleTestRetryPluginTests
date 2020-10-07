@@ -12,12 +12,6 @@ class RandomFlakyTestSimulatorSpec extends Specification {
 
     @Shared
     Integer randomNumberValue = null
-    @Shared
-    boolean forceSecondSuccess = true
-    @Shared
-    boolean forceThirdFailure = true
-    @Shared
-    boolean finalTestSuccessful = false
 
     private void generateRandomNumberValue() {
         Random rnd = new Random()
@@ -28,7 +22,6 @@ class RandomFlakyTestSimulatorSpec extends Specification {
 
     @PipelineTests
     def FlakyConfirmNumberOfSuppressedFeaturesInThisSpec() {
-
         int numberOfExcludedTests = 0
         for (FeatureInfo featureInfo : specificationContext.currentSpec.getAllFeatures()) {
             if (featureInfo.isSkipped())
