@@ -2,12 +2,9 @@ package Pipeline
 
 import Common.Annotations.PipelineTests
 import Common.Utils.Verify
-import groovy.util.logging.Slf4j
-import org.spockframework.runtime.model.FeatureInfo
 import spock.lang.Shared
 import spock.lang.Specification
 
-@Slf4j
 class RandomFlakyTestSimulatorSpec extends Specification {
 
     @Shared
@@ -18,17 +15,6 @@ class RandomFlakyTestSimulatorSpec extends Specification {
         int randomNumberVal = rnd.nextInt(4)
         randomNumberValue = randomNumberVal
         println(randomNumberVal)
-    }
-
-    @PipelineTests
-    def FlakyConfirmNumberOfSuppressedFeaturesInThisSpec() {
-        int numberOfExcludedTests = 0
-        for (FeatureInfo featureInfo : specificationContext.currentSpec.getAllFeatures()) {
-            if (featureInfo.isSkipped())
-                numberOfExcludedTests++
-        }
-        expect:
-        assert numberOfExcludedTests == 0
     }
 
     @PipelineTests

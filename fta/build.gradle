@@ -12,14 +12,7 @@ dependencies {
         exclude group: "org.codehaus.groovy" // exclude groovy from the dependencies for spock-core
     }
     compile "org.spockframework:spock-junit4:2.0-M2-groovy-3.0"                     // Workaround for Spock and JUnit 5 incompatibility
-    compile 'com.aoe:geb-spock-reports:0.3.0-RC1'                                   // Provides screenshots for reports
-    compile('com.athaydes:spock-reports:2.0-RC2') {                                 // HTML Report for test run
-        transitive = false // this avoids affecting the version of Groovy/Spock
-    }
-    compile 'org.slf4j:slf4j-api:1.7.30'
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-    compile 'ch.qos.logback:logback-core:1.2.3'
-    compile 'commons-io:commons-io:2.6'
+
     compile 'org.assertj:assertj-core:3.15.0'                                       // AssertJ methods
     compile 'org.gradle:test-retry-gradle-plugin:1.1.9'
 }
@@ -28,6 +21,7 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'https://mvnrepository.com/artifact/org.spockframework/spock-core'}
     }
     dependencies {
         classpath 'org.gradle:test-retry-gradle-plugin:1.1.9'
@@ -48,7 +42,6 @@ tasks.withType(Test) {
     group JavaBasePlugin.VERIFICATION_GROUP
 
     systemProperties = System.properties
-    systemProperty 'geb.env', System.getProperty('geb.env') ?: 'testEnv'
     systemProperty 'forceAllTests', System.getProperty('forceAllTests') ?: false
     testLogging {
         events 'started', 'passed'
